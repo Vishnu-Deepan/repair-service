@@ -4,10 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'customer/customer_home.dart';
 import 'mechanic/mechanic_home.dart';
 import 'owner/owner_home.dart';
+import 'service/firebase_services.dart';
 
 enum UserRole { Customer, Owner, Mechanic }
 
 class LoginSignupPage extends StatefulWidget {
+  const LoginSignupPage({super.key});
+
   @override
   _LoginSignupPageState createState() => _LoginSignupPageState();
 }
@@ -107,7 +110,17 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
           email: _emailController.text,
           password: _passwordController.text,
         );
+
+        // Automatically add mechanic to Firestore if selected role is Mechanic
+        if (_selectedRole == UserRole.Mechanic) {
+          await FirestoreService.addMechanic(
+            _emailController.text.split('@')[0], // Use email prefix as name
+            _emailController.text,
+            // Add other details as needed
+          );
+        }
       }
+
       // Navigate to the respective home page based on selected role
       switch (_selectedRole) {
         case UserRole.Customer:
@@ -125,7 +138,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
         case UserRole.Mechanic:
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => MechanicHomePage()),
+            MaterialPageRoute(builder: (context) => MechanicHomePage(mechanicEmail: _emailController.text,)),
           );
           break;
       }
@@ -144,7 +157,6 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
       });
     }
   }
-
   @override
   void dispose() {
     _emailController.dispose();

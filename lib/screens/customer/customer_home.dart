@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:repair_service/screens/login_signup_screen.dart';
 
 import 'submit_new_request.dart';
+import 'track_status_screen.dart';
 
 class CustomerHomePage extends StatelessWidget {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -45,7 +47,7 @@ class CustomerHomePage extends StatelessWidget {
               child: GestureDetector(
                 onTap: () {
                   // Navigate to track request status screen
-                  // Example: Navigator.push(context, MaterialPageRoute(builder: (context) => TrackStatusScreen()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => TrackStatusScreen()));
                 },
                 child: Card(
                   child: Center(
@@ -78,6 +80,9 @@ class CustomerHomePage extends StatelessWidget {
                   await _auth.signOut();
                   // Close the bottom sheet
                   Navigator.pop(context);
+                  Navigator.pushReplacement(context,MaterialPageRoute<void>(
+                    builder: (BuildContext context) => const LoginSignupPage(),
+                  ), );
                   // Navigate back to the login/signup screen
                   // Example: Navigator.popUntil(context, ModalRoute.withName('/'));
                 },
