@@ -10,13 +10,18 @@ Welcome to the Repair Service App documentation. This document provides an overv
   <img src="AppScreenshots/Screenshot_20240505_122928.jpg" alt="Screenshot 2" style="width:25%;">
 </div>
 
-**User Screens**
+**Customer Screens**
 <div style="display:flex;">
   <img src="AppScreenshots/Screenshot_20240505_122945.jpg" alt="Screenshot 3" style="width:25%;">
   <img src="AppScreenshots/Screenshot_20240505_144307.jpg" alt="Screenshot 3" style="width:25%;">
   <img src="AppScreenshots/Screenshot_20240505_144336.jpg" alt="Screenshot 3" style="width:25%;">
   <img src="AppScreenshots/Screenshot_20240505_153442.jpg" alt="Screenshot 3" style="width:25%;">  
 </div>
+
+**Owner Screens**
+<div style="display:flex;">
+  <img src="AppScreenshots/Screenshot_20240505_155832.jpg" alt="Screenshot 3" style="width:25%;">
+
 
 ### Overview
 
