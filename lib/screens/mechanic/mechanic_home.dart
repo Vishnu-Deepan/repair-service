@@ -1,262 +1,101 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:repair_service/screens/login_signup_screen.dart';
 
-class MechanicHomePage extends StatelessWidget {
+import 'detailed_request_mechanic.dart';
+
+class MechanicHomePage extends StatefulWidget {
   final String mechanicEmail;
 
   const MechanicHomePage({Key? key, required this.mechanicEmail}) : super(key: key);
 
   @override
+  State<MechanicHomePage> createState() => _MechanicHomePageState();
+}
+
+class _MechanicHomePageState extends State<MechanicHomePage> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Mechanic Home'),
-      ),
-      body: Center(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.purple.shade200, Colors.blue.shade200],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        padding: EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  // Navigate to New Repair Requests screen
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => NewRequestsPage(mechanicEmail: mechanicEmail)));
-                },
-                child: Card(
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'New Repair Requests',
-                        style: TextStyle(fontSize: 20.0),
-                      ),
-                    ),
+            SizedBox(height: MediaQuery.of(context).padding.top * 1.4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Mechanic Home',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
-              ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginSignupPage(),
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.logout_rounded, color: Colors.white),
+                ),
+              ],
             ),
             Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  // Navigate to Completed Repair Requests screen
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => CompletedRequestsPage(mechanicEmail: mechanicEmail)));
-                },
-                child: Card(
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Completed Repair Requests',
-                        style: TextStyle(fontSize: 20.0),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('repair_requests')
+                    .where('assignedMechanic', isEqualTo: widget.mechanicEmail)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData || snapshot.data == null) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  final documents = snapshot.data!.docs;
+                  print('Number of documents: ${documents.length}');
 
-class NewRequestsPage extends StatelessWidget {
-  final String mechanicEmail;
+                  if (documents.isEmpty) {
+                    return Center(
+                      child: Text('No repair requests assigned'),
+                    );
+                  }
 
-  const NewRequestsPage({Key? key, required this.mechanicEmail}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('New Requests'),
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('repair_requests')
-            .where('assignedMechanic', isEqualTo: mechanicEmail)
-            .where('status', whereIn: ['Pending', 'On Hold', 'assigned'])
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData || snapshot.data == null) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          final documents = snapshot.data!.docs;
-          print('Number of documents: ${documents.length}');
-
-          if (documents.isEmpty) {
-            return Center(
-              child: Text('No new requests'),
-            );
-          }
-          return ListView.builder(
-            itemCount: documents.length,
-            itemBuilder: (context, index) {
-              final document = documents[index];
-              return TaskTile(document: document);
-            },
-          );
-        },
-      ),
-    );
-  }
-}
-
-class CompletedRequestsPage extends StatelessWidget {
-  final String mechanicEmail;
-
-  const CompletedRequestsPage({Key? key, required this.mechanicEmail}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Completed Requests'),
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('repair_requests')
-            .where('assignedMechanic', isEqualTo: mechanicEmail)
-            .where('status', isEqualTo: 'Completed')
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          final documents = snapshot.data!.docs;
-          return ListView.builder(
-            itemCount: documents.length,
-            itemBuilder: (context, index) {
-              final document = documents[index];
-              return CompletedTaskTile(document: document);
-            },
-          );
-        },
-      ),
-    );
-  }
-}
-
-class TaskTile extends StatefulWidget {
-  final DocumentSnapshot document;
-
-  TaskTile({required this.document, Key? key}) : super(key: key);
-
-  @override
-  _TaskTileState createState() => _TaskTileState();
-}
-
-class _TaskTileState extends State<TaskTile> {
-  String? selectedStatus;
-  String? onHoldReason;
-
-  @override
-  void initState() {
-    super.initState();
-    // Set default value for selectedStatus
-    selectedStatus = widget.document['status'] == 'assigned' ? 'Pending' : widget.document['status'];
-  }
-
-  void confirmSelection() {
-    if (selectedStatus != null) {
-      // Update status in Firestore
-      FirebaseFirestore.instance.collection('repair_requests').doc(widget.document.id).update({
-        'status': selectedStatus,
-        'onHoldReason': selectedStatus == 'On Hold' ? onHoldReason : null,
-      });
-
-      // Clear selection
-      setState(() {
-        selectedStatus = null;
-        onHoldReason = null;
-      });
-    }
-  }
-
-  void completeRequest() {
-    // Show confirmation dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Confirm Completion'),
-          content: Text('Are you sure you want to mark this repair request as completed?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                // Update status in Firestore
-                FirebaseFirestore.instance.collection('repair_requests').doc(widget.document.id).update({
-                  'status': 'Completed',
-                });
-
-                // Close dialog
-                Navigator.of(context).pop();
-              },
-              child: Text('Confirm'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final String itemType = widget.document['itemType'] ?? 'N/A';
-    final String issueDescription = widget.document['issueDescription'] ?? 'N/A';
-
-    return Card(
-      child: ListTile(
-        title: Text('Item Type: $itemType'),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Issue Description: $issueDescription'),
-            DropdownButtonFormField<String>(
-              value: selectedStatus,
-              items: ['Pending', 'On Hold'].map((status) {
-                return DropdownMenuItem<String>(
-                  value: status,
-                  child: Text(status),
-                );
-              }).toList(),
-              onChanged: (String? value) {
-                setState(() {
-                  selectedStatus = value;
-                });
-              },
-            ),
-            if (selectedStatus == 'On Hold')
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Reason for On Hold',
-                ),
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                onChanged: (value) {
-                  setState(() {
-                    onHoldReason = value;
+                  // Sort the documents based on status
+                  documents.sort((a, b) {
+                    final String statusA = a['status'] ?? '';
+                    final String statusB = b['status'] ?? '';
+                    if (statusA == 'Completed' && statusB != 'Completed') {
+                      return 1;
+                    } else if (statusA != 'Completed' && statusB == 'Completed') {
+                      return -1;
+                    }
+                    return 0;
                   });
+
+                  return ListView.builder(
+                    itemCount: documents.length,
+                    itemBuilder: (context, index) {
+                      final document = documents[index];
+                      return TaskTile(document: document);
+                    },
+                  );
                 },
               ),
-            ElevatedButton(
-              onPressed: confirmSelection,
-              child: Text('Confirm'),
-            ),
-            ElevatedButton(
-              onPressed: completeRequest,
-              child: Text('Mark as Completed'),
             ),
           ],
         ),
@@ -265,23 +104,76 @@ class _TaskTileState extends State<TaskTile> {
   }
 }
 
-class CompletedTaskTile extends StatelessWidget {
+
+class TaskTile extends StatelessWidget {
   final DocumentSnapshot document;
 
-  CompletedTaskTile({required this.document});
+  TaskTile({required this.document});
 
   @override
   Widget build(BuildContext context) {
     final String itemType = document['itemType'] ?? 'N/A';
     final String issueDescription = document['issueDescription'] ?? 'N/A';
+    final String status = document['status'] ?? '';
 
-    return
+    IconData iconData;
+    switch (itemType) {
+      case 'Camera':
+        iconData = Icons.camera_alt;
+        break;
+      case 'Mobile Phone':
+        iconData = Icons.phone_android;
+        break;
+      case 'Tablet':
+        iconData = Icons.tablet;
+        break;
+      case 'Headphones':
+        iconData = Icons.headset;
+        break;
+      default:
+        iconData = Icons.device_unknown;
+    }
 
-      Card(
-        child: ListTile(
-          title: Text('Item Type: $itemType'),
-          subtitle: Text('Issue Description: $issueDescription'),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => StreamBuilder<DocumentSnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('repair_requests')
+                  .doc(document.id) // Use the document id to fetch details
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData || snapshot.data == null) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                final detailedDocument = snapshot.data!;
+                final documentId = document.id;
+                // Now you have the detailed document, you can pass it to the RequestDetailsScreen
+                return RequestDetailsScreen(document: detailedDocument, documentId: documentId,);
+              },
+            ),
+          ),
+        );
+      },
+      child: Card(
+        elevation: 2,
+        margin: EdgeInsets.symmetric(vertical: 8.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          side: BorderSide(color: status == 'Completed' ? Colors.green : Colors.transparent,
+          width: 4),
         ),
-      );
+        child: ListTile(
+          leading: Icon(iconData, color: Colors.black),
+          title: Text('Item Type: $itemType', style: TextStyle(color: Colors.black)),
+          subtitle: Text('Issue Description: $issueDescription', style: TextStyle(color: Colors.black)),
+          trailing: status == 'Completed' ? Icon(Icons.done_outline_sharp, color: Colors.grey) : Icon(Icons.arrow_forward_ios, color: Colors.grey),
+        ),
+      ),
+    );
   }
 }
+
