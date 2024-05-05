@@ -2,6 +2,14 @@
 
 Welcome to the Repair Service App documentation. This document provides an overview of the app's features, architecture, and usage instructions.
 
+### App Screenshots
+
+<div style="display:flex;">
+  <img src="AppScreenshots/Screenshot_20240505_122920.jpg" alt="Screenshot 1" style="width:33%;">
+  <img src="AppScreenshots/Screenshot_20240505_122928.jpg" alt="Screenshot 2" style="width:33%;">
+  <img src="AppScreenshots/Screenshot_20240505_122945.jpg" alt="Screenshot 3" style="width:33%;">
+</div>
+
 ### Overview
 
 The Repair Service App is designed to streamline the process of managing repair requests for mechanics. It allows mechanics to view and manage repair requests assigned to them, update the status of requests, and communicate with clients efficiently.
