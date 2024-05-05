@@ -4,11 +4,15 @@ Welcome to the Repair Service App documentation. This document provides an overv
 
 ### App Screenshots
 
+<br>
+
 **Login Signup**
 <div style="display:flex;">
   <img src="AppScreenshots/Screenshot_20240505_122920.jpg" alt="Screenshot 1" style="width:25%;">
   <img src="AppScreenshots/Screenshot_20240505_122928.jpg" alt="Screenshot 2" style="width:25%;">
 </div>
+
+<br>
 
 **Customer Screens**
 <div style="display:flex;">
@@ -18,9 +22,22 @@ Welcome to the Repair Service App documentation. This document provides an overv
   <img src="AppScreenshots/Screenshot_20240505_153442.jpg" alt="Screenshot 3" style="width:25%;">  
 </div>
 
+<br>
+
 **Owner Screens**
 <div style="display:flex;">
-  <img src="AppScreenshots/Screenshot_20240505_155832.jpg" alt="Screenshot 3" style="width:25%;">
+  <img src="AppScreenshots/Screenshot_20240505_180446.jpg" alt="Screenshot 3" style="width:25%;">
+  <img src="AppScreenshots/Screenshot_20240505_180453.jpg" alt="Screenshot 3" style="width:25%;">
+  <img src="AppScreenshots/Screenshot_20240505_180528.jpg" alt="Screenshot 3" style="width:25%;">
+  <img src="AppScreenshots/Screenshot_20240505_180541.jpg" alt="Screenshot 3" style="width:25%;">
+</div>
+<br>
+
+**Mechanic Screen**
+<div style="display:flex;">
+  <img src="AppScreenshots/Screenshot_20240505_200122.jpg" alt="Screenshot 3" style="width:25%;">
+  <img src="AppScreenshots/Screenshot_20240505_200130.jpg" alt="Screenshot 3" style="width:25%;">
+</div>
 
 
 ### Overview
