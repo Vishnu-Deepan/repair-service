@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:repair_service/firebase_options.dart';
 import 'package:repair_service/screens/login_signup_screen.dart';
 
+import 'screens/customer/submit_new_request.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -14,7 +16,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: LoginSignupPage(),
     );
