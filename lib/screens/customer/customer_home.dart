@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:repair_service/screens/customer/track_status_screen.dart';
 import '../service/model.dart';
 import 'submit_new_request.dart';
 
@@ -20,8 +21,8 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
     Service('Tablet', 'https://img.icons8.com/nolan/96/ipad.png'),
     Service('Smartwatch',
         'https://img.icons8.com/nolan/96/1A6DFF/C822FF/watches-front-view--v2.png'),
-    Service('Camera',
-        'https://img.icons8.com/nolan/96/1A6DFF/C822FF/camera.png'),
+    Service(
+        'Camera', 'https://img.icons8.com/nolan/96/1A6DFF/C822FF/camera.png'),
     Service('Headphones', 'https://img.icons8.com/nolan/96/headphones.png'),
   ];
 
@@ -35,7 +36,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blue.shade200, Colors.purple.shade200],
+            colors: [Colors.purple.shade200,Colors.blue.shade200],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -57,15 +58,18 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                           color: Colors.white),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        await _auth.signOut();
+                        // Navigate to login screen
+                        Navigator.of(context).pushReplacementNamed('/login');
+                      },
                       icon: Icon(Icons.logout_outlined, color: Colors.white),
                     ),
                   ],
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(
-                    left: 20.0, top: 10.0, right: 10.0),
+                padding: EdgeInsets.only(left: 20.0, top: 10.0, right: 10.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -86,8 +90,11 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                   child: GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2, // Display two gadgets in one row
-                      childAspectRatio: deviceWidth / (deviceWidth * 0.78), // Adjust aspect ratio
-                      crossAxisSpacing: (MediaQuery.of(context).size.width * 0.12) / 2, // Evenly distribute spacing
+                      childAspectRatio: deviceWidth /
+                          (deviceWidth * 0.78), // Adjust aspect ratio
+                      crossAxisSpacing:
+                      (MediaQuery.of(context).size.width * 0.12) /
+                          2, // Evenly distribute spacing
                       mainAxisSpacing: 20.0,
                     ),
                     itemCount: gadgets.length,
@@ -98,7 +105,8 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => NewRequestPage(gadget: gadgets[index]),
+                              builder: (context) =>
+                                  NewRequestPage(gadget: gadgets[index]),
                             ),
                           );
                         },
@@ -111,11 +119,26 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                     },
                   ),
                 ),
-              ),              SizedBox(
+              ),
+              SizedBox(
                 height: 20,
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  if (_auth.currentUser != null) {
+                    // Navigate to track status screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) => const TrackStatusScreen() ,
+                      ),
+                    );
+                  } else {
+                    // User is not authenticated, handle accordingly
+                    // For example, show a message or navigate to login screen
+                    print("User null");
+                  }
+                },
                 child: Container(
                   width: MediaQuery.of(context).size.width -
                       MediaQuery.of(context).padding.top,
@@ -127,6 +150,8 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                       end: Alignment.centerRight,
                     ),
                     borderRadius: BorderRadius.circular(12),
+
+
                   ),
                   child: Center(
                     child: Text(
@@ -168,9 +193,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
             ),
             Text(
               name,
-              style: TextStyle
-
-                (fontSize: 15),
+              style: TextStyle(fontSize: 15),
             )
           ]),
     );

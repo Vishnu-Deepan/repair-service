@@ -12,77 +12,150 @@ class RequestDetailsScreen extends StatefulWidget {
 
 class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
   String? _selectedMechanicEmail;
-  List<String> _mechanicEmails = []; // List to store available mechanic emails
+  List<String> _mechanicEmails = [];
 
   @override
   void initState() {
     super.initState();
-    _fetchMechanicEmails(); // Fetch mechanic emails when the screen initializes
+    _fetchMechanicEmails();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Request Details'),
-      ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('repair_requests').doc(widget.requestId).snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-
-          if (!snapshot.hasData || !snapshot.data!.exists) {
-            return Center(child: Text('Request not found'));
-          }
-
-          var request = snapshot.data!;
-          return Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Item Type: ${request['itemType']}',
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8.0),
-                Text(
-                  'Issue Description: ${request['issueDescription']}',
-                  style: TextStyle(fontSize: 16.0),
-                ),
-                SizedBox(height: 16.0),
-                DropdownButtonFormField<String>(
-                  value: _selectedMechanicEmail,
-                  hint: Text('Select Mechanic'),
-                  items: _mechanicEmails.map((mechanicEmail) {
-                    return DropdownMenuItem(
-                      value: mechanicEmail,
-                      child: Text(mechanicEmail),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedMechanicEmail = value;
-                    });
-                  },
-                ),
-                SizedBox(height: 16.0),
-                ElevatedButton(
-                  onPressed: () {
-                    _assignMechanic(request.id, _selectedMechanicEmail);
-                  },
-                  child: Text('Assign Mechanic'),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.purple.shade100, Colors.blue.shade100],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Center(
+          child: Container(
+            margin: EdgeInsets.only(right: 16.0,left: 16.0,bottom: 30.0,top: 30.0),
+            padding: EdgeInsets.only(right: 16.0,left: 16.0,bottom: 30.0,top: 30.0),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.purple.shade100, Colors.blue.shade100],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(10.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: Offset(0, 3),
                 ),
               ],
             ),
-          );
-        },
+            child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('repair_requests')
+                  .doc(widget.requestId)
+                  .snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                }
+
+                if (!snapshot.hasData || !snapshot.data!.exists) {
+                  return Text('Request not found');
+                }
+
+                var request = snapshot.data!;
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      '${request['brand']} ${request['model']}',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 18.0, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 8.0),
+                    Text(
+                      'Issue Description: ${request['issueDescription']}',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 16.0),
+                    ),
+                    SizedBox(height: 16.0),
+                    DropdownButtonFormField<String>(
+                      value: _selectedMechanicEmail,
+                      hint: Text(
+                        'Select Mechanic',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      items: _mechanicEmails.map((mechanicEmail) {
+                        return DropdownMenuItem(
+                          value: mechanicEmail,
+                          child: Text(
+                            mechanicEmail,
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedMechanicEmail = value;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16.0),
+                    ElevatedButton(
+                      onPressed: () {
+                        _assignMechanic(request.id, _selectedMechanicEmail);
+                      },
+                      child: Text('Assign Mechanic'),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white, backgroundColor: Colors.blue,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16.0),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.yellow,
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      padding: EdgeInsets.all(10.0),
+                      child: Center(
+                        child: Text(
+                          'Request Status: ${request['status']}',
+                          style: TextStyle(
+                            // color: request['status']!=="pending",
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -103,7 +176,7 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
         'status': "assigned to a mechanic"
       });
 
-          FirebaseFirestore.instance.collection('repair_requests').doc(requestId).update({
+      FirebaseFirestore.instance.collection('repair_requests').doc(requestId).update({
         'assignedMechanic': mechanicEmail,
       }).then((value) {
         ScaffoldMessenger.of(context).showSnackBar(
