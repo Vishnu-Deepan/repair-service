@@ -24,9 +24,12 @@ class MechanicHomePage extends StatelessWidget {
                 },
                 child: Card(
                   child: Center(
-                    child: Text(
-                      'New Repair Requests',
-                      style: TextStyle(fontSize: 20.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'New Repair Requests',
+                        style: TextStyle(fontSize: 20.0),
+                      ),
                     ),
                   ),
                 ),
@@ -40,9 +43,12 @@ class MechanicHomePage extends StatelessWidget {
                 },
                 child: Card(
                   child: Center(
-                    child: Text(
-                      'Completed Repair Requests',
-                      style: TextStyle(fontSize: 20.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Completed Repair Requests',
+                        style: TextStyle(fontSize: 20.0),
+                      ),
                     ),
                   ),
                 ),
@@ -54,7 +60,6 @@ class MechanicHomePage extends StatelessWidget {
     );
   }
 }
-
 
 class NewRequestsPage extends StatelessWidget {
   final String mechanicEmail;
@@ -137,7 +142,6 @@ class CompletedRequestsPage extends StatelessWidget {
   }
 }
 
-
 class TaskTile extends StatefulWidget {
   final DocumentSnapshot document;
 
@@ -212,53 +216,54 @@ class _TaskTileState extends State<TaskTile> {
     final String itemType = widget.document['itemType'] ?? 'N/A';
     final String issueDescription = widget.document['issueDescription'] ?? 'N/A';
 
-    return ListTile(
-      title: Text('Item Type: $itemType'),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Issue Description: $issueDescription'),
-          DropdownButtonFormField<String>(
-            value: selectedStatus,
-            items: ['Pending', 'On Hold'].map((status) {
-              return DropdownMenuItem<String>(
-                value: status,
-                child: Text(status),
-              );
-            }).toList(),
-            onChanged: (String? value) {
-              setState(() {
-                selectedStatus = value;
-              });
-            },
-          ),
-          if (selectedStatus == 'On Hold')
-            TextFormField(
-              decoration: InputDecoration(
-                labelText: 'Reason for On Hold',
-              ),
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
-              onChanged: (value) {
+    return Card(
+      child: ListTile(
+        title: Text('Item Type: $itemType'),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Issue Description: $issueDescription'),
+            DropdownButtonFormField<String>(
+              value: selectedStatus,
+              items: ['Pending', 'On Hold'].map((status) {
+                return DropdownMenuItem<String>(
+                  value: status,
+                  child: Text(status),
+                );
+              }).toList(),
+              onChanged: (String? value) {
                 setState(() {
-                  onHoldReason = value;
+                  selectedStatus = value;
                 });
               },
             ),
-          ElevatedButton(
-            onPressed: confirmSelection,
-            child: Text('Confirm'),
-          ),
-          ElevatedButton(
-            onPressed: completeRequest,
-            child: Text('Mark as Completed'),
-          ),
-        ],
+            if (selectedStatus == 'On Hold')
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Reason for On Hold',
+                ),
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                onChanged: (value) {
+                  setState(() {
+                    onHoldReason = value;
+                  });
+                },
+              ),
+            ElevatedButton(
+              onPressed: confirmSelection,
+              child: Text('Confirm'),
+            ),
+            ElevatedButton(
+              onPressed: completeRequest,
+              child: Text('Mark as Completed'),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
-
 
 class CompletedTaskTile extends StatelessWidget {
   final DocumentSnapshot document;
@@ -270,9 +275,13 @@ class CompletedTaskTile extends StatelessWidget {
     final String itemType = document['itemType'] ?? 'N/A';
     final String issueDescription = document['issueDescription'] ?? 'N/A';
 
-    return ListTile(
-      title: Text('Item Type: $itemType'),
-      subtitle: Text('Issue Description: $issueDescription'),
-    );
+    return
+
+      Card(
+        child: ListTile(
+          title: Text('Item Type: $itemType'),
+          subtitle: Text('Issue Description: $issueDescription'),
+        ),
+      );
   }
 }

@@ -33,8 +33,8 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
         ),
         child: Center(
           child: Container(
-            margin: EdgeInsets.only(right: 16.0,left: 16.0,bottom: 30.0,top: 30.0),
-            padding: EdgeInsets.only(right: 16.0,left: 16.0,bottom: 30.0,top: 30.0),
+            margin: EdgeInsets.only(right: 16.0,left: 16.0,bottom: 300.0,top: 300.0),
+            padding: EdgeInsets.only(right: 16.0,left: 16.0),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [Colors.purple.shade100, Colors.blue.shade100],
@@ -91,7 +91,7 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                     DropdownButtonFormField<String>(
                       value: _selectedMechanicEmail,
                       hint: Text(
-                        'Select Mechanic',
+                        request['assignedMechanic']??"Select Mechanic",
                         style: TextStyle(color: Colors.black),
                       ),
                       items: _mechanicEmails.map((mechanicEmail) {
@@ -119,14 +119,16 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                     ),
                     SizedBox(height: 16.0),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: request['status'] == 'pending'
+                          ? () {
                         _assignMechanic(request.id, _selectedMechanicEmail);
-                      },
+                      }
+                          : null, // Set onPressed to null when status is not Pending
                       child: Text('Assign Mechanic'),
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white, backgroundColor: Colors.blue,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 15),
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.blue,
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
@@ -135,7 +137,7 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                     SizedBox(height: 16.0),
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.yellow,
+                        color: Colors.yellow[400],
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       padding: EdgeInsets.all(10.0),
@@ -185,6 +187,8 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
             duration: Duration(seconds: 3),
           ),
         );
+        // Navigate back to OwnerHomePage
+        Navigator.pop(context);
       }).catchError((error) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -202,4 +206,6 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
       );
     }
   }
+
+
 }
