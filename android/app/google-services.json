@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1091664816309",
+    "project_id": "repair-service-57ef9",
+    "storage_bucket": "repair-service-57ef9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1091664816309:android:2300bd39da0bd3802ab6fc",
+        "android_client_info": {
+          "package_name": "com.visify.repair_service"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDr92NjH-baePrSwfTkFLc1JzUgmpSXZEk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

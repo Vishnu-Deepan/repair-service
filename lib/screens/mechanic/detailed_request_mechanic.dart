@@ -45,7 +45,7 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
             end: Alignment.bottomRight,
           ),
         ),
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -58,9 +58,9 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                     Navigator.pop(context);
                   },
                   icon:
-                      Icon(Icons.arrow_back_ios_new_sharp, color: Colors.white),
+                      const Icon(Icons.arrow_back_ios_new_sharp, color: Colors.white),
                 ),
-                Text(
+                const Text(
                   'Mechanic Home',
                   style: TextStyle(
                     fontSize: 24,
@@ -68,38 +68,38 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                     color: Colors.white,
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
               ],
             ),
             Expanded(
               child: ListView(
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 children: [
                   Card(
                     child: ListTile(
-                      title: Text('Item Type'),
+                      title: const Text('Item Type'),
                       subtitle: Text(itemType),
                     ),
                   ),
                   Card(
                     child: ListTile(
-                      title: Text('Issue Description'),
+                      title: const Text('Issue Description'),
                       subtitle: Text(issueDescription),
                     ),
                   ),
                   Card(
                     child: ListTile(
-                      title: Text('Brand'),
+                      title: const Text('Brand'),
                       subtitle: Text(brand),
                     ),
                   ),
                   Card(
                     child: ListTile(
-                      title: Text('Model'),
+                      title: const Text('Model'),
                       subtitle: Text(model),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   if (widget.document['status'] != "Completed")
@@ -113,15 +113,15 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text("Confirmation"),
-                                  content: Text(
+                                  title: const Text("Confirmation"),
+                                  content: const Text(
                                       "Are you sure you want to put this request on hold?"),
                                   actions: [
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
-                                      child: Text("Cancel"),
+                                      child: const Text("Cancel"),
                                     ),
                                     ElevatedButton(
                                       onPressed: () {
@@ -142,7 +142,7 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                                         });
                                         Navigator.of(context).pop();
                                       },
-                                      child: Text(
+                                      child: const Text(
                                         "Confirm",
                                         style: TextStyle(color: Colors.white),
                                       ),
@@ -160,7 +160,7 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                               },
                             );
                           },
-                          child: Text(
+                          child: const Text(
                             'On Hold',
                             style: TextStyle(color: Colors.white),
                           ),
@@ -179,15 +179,15 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text("Confirmation"),
-                                  content: Text(
+                                  title: const Text("Confirmation"),
+                                  content: const Text(
                                       "Completed button action cannot be reverted. Are you sure?"),
                                   actions: [
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
-                                      child: Text("Cancel"),
+                                      child: const Text("Cancel"),
                                     ),
                                     ElevatedButton(
                                       onPressed: () {
@@ -209,7 +209,7 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                                         });
                                         Navigator.of(context).pop();
                                       },
-                                      child: Text(
+                                      child: const Text(
                                         'Confirm',
                                         style: TextStyle(color: Colors.white),
                                       ),
@@ -227,7 +227,7 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                               },
                             );
                           },
-                          child: Text(
+                          child: const Text(
                             'Completed',
                             style: TextStyle(color: Colors.white),
                           ),
@@ -241,7 +241,7 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                         ),
                       ],
                     ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Expanded(
@@ -253,36 +253,45 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                           height: 200,
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(_getImagePath(isRaining)),
-                              fit: BoxFit.cover,
-                            ),
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Stack(
-                            children: [
-                              // Black overlay with transparency
-                              Container(
-                                color: Colors.black54,
-                              ),
-                              // Overlay text
-                              Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                                  child: Text(
-                                    _getOverlayText(isRaining),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    textAlign: TextAlign.center,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Stack(
+                              children: [
+                                // Background image
+                                Image.network(
+                                  _getImagePath(isRaining),
+                                  fit: BoxFit.cover,
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 200,
+                                ),
+                                // Black overlay with transparency
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.black54,
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
-                              ),
-                            ],
+                                // Overlay text
+                                Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 28.0),
+                                    child: Text(
+                                      _getOverlayText(isRaining),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        )                      ],
                     ),
                   )
                 ],
@@ -299,28 +308,32 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
 String _getOverlayText(String weatherCondition) {
   switch (weatherCondition) {
     case 'Rain':
-      return "It's raining at customer location, consider later";
+      return "️🌧️ Consider Rescheduling!";
     case 'Thunderstorm':
-      return "It's thunderstorm at customer location, schedule later";
+      return "⚡️ Hold off! Reschedule for calmer skies.";
     case 'Drizzle':
-      return "It's drizzling there, it may rain later";
+      return "️ Light drizzle. Keep an eye on the forecast.";
     case 'Clear':
+      return "☀️ Perfect weather for a repair!";
     default:
-      return "It's clear weather, no problem";
+      return "❄️ Snowy! Reschedule for warmer days.";
   }
+
+
 }
 
 // Function to get image path based on weather condition
 String _getImagePath(String weatherCondition) {
   switch (weatherCondition) {
     case 'Rain':
-      return 'https://images.newscientist.com/wp-content/uploads/2024/02/06103007/SEI_189745988.jpg';
+      return 'https://wallpapers.com/images/hd/rain-background-0gxckn1rxnuwpake.jpg';
     case 'Thunderstorm':
       return 'https://images.newscientist.com/wp-content/uploads/2024/02/06103007/SEI_189745988.jpg';
     case 'Drizzle':
-      return 'assets/drizzle.jpg';
+      return 'https://t3.ftcdn.net/jpg/00/00/51/58/360_F_515820_0FGvwS7d9XgiEsuQ4S7d9WghijGPZj.jpg';
     case 'Clear':
+      return 'https://media.istockphoto.com/id/138295858/photo/green-rice-fild-with-evening-sky.jpg?s=612x612&w=0&k=20&c=NUhiKLDCPN_AGEjgRVPBRHyFsZXCCEwLDZVNUTFbjGc=';
     default:
-      return 'assets/clear.jpg';
+      return 'https://wallpapers.com/images/hd/snowfall-hbzhowjy48hbrs5q.jpg';
   }
 }
