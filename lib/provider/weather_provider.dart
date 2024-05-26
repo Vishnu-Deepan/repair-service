@@ -4,10 +4,10 @@ import '../models/weather_model.dart';
 
 class WeatherProvider extends ChangeNotifier {
   WeatherData? _weatherData;
-  bool _isRaining = false;
+  late String _isRaining;
 
   WeatherData? get weatherData => _weatherData;
-  bool get isRaining => _isRaining;
+  String get isRaining => _isRaining;
 
   void updateWeather(BuildContext context) async {
     try {

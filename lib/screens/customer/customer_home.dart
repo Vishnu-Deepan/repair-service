@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:repair_service/screens/customer/track_status_screen.dart';
+import 'package:repair_service/screens/login_signup_screen.dart';
 import '../../models/service_model.dart';
 import 'submit_new_request.dart';
 
@@ -36,7 +37,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.purple.shade200,Colors.blue.shade200],
+            colors: [Colors.purple.shade200, Colors.blue.shade200],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -61,7 +62,8 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                       onPressed: () async {
                         await _auth.signOut();
                         // Navigate to login screen
-                        Navigator.of(context).pushReplacementNamed('/login');
+                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginSignupPage(),), (route) => false);
+
                       },
                       icon: Icon(Icons.logout_outlined, color: Colors.white),
                     ),
@@ -93,8 +95,8 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                       childAspectRatio: deviceWidth /
                           (deviceWidth * 0.78), // Adjust aspect ratio
                       crossAxisSpacing:
-                      (MediaQuery.of(context).size.width * 0.12) /
-                          2, // Evenly distribute spacing
+                          (MediaQuery.of(context).size.width * 0.12) /
+                              2, // Evenly distribute spacing
                       mainAxisSpacing: 20.0,
                     ),
                     itemCount: gadgets.length,
@@ -130,7 +132,8 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute<void>(
-                        builder: (BuildContext context) => const TrackStatusScreen() ,
+                        builder: (BuildContext context) =>
+                            const TrackStatusScreen(),
                       ),
                     );
                   } else {
@@ -150,8 +153,6 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                       end: Alignment.centerRight,
                     ),
                     borderRadius: BorderRadius.circular(12),
-
-
                   ),
                   child: Center(
                     child: Text(

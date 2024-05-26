@@ -234,7 +234,7 @@ String isRaining(Map<String, dynamic> weatherData) {
   List<dynamic> weatherConditions = weatherData['weather'];
 
   for (var condition in weatherConditions) {
-    String id = condition['id'];
+    int id = condition['id'];
 
     if (id.toString() == '200' || id.toString() == '201' || id.toString() == '202' || id.toString() == '210' || id.toString() == '211' || id.toString() == '212' || id.toString() == '221' || id.toString() == '230' || id.toString() == '231' || id.toString() == '232'){
       return "Thunderstorm";

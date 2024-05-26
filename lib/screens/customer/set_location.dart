@@ -78,7 +78,7 @@ class _SetLocationPageState extends State<SetLocationPage> {
                   mapController: mapController,
                   options: MapOptions(
                     initialCenter: LatLng(
-                        currentPosition!.latitude, currentPosition!.longitude),
+                        currentPosition.latitude, currentPosition.longitude),
                     initialZoom: 17,
                     interactionOptions: const InteractionOptions(
                       flags: ~InteractiveFlag.doubleTapZoom,
@@ -95,21 +95,20 @@ class _SetLocationPageState extends State<SetLocationPage> {
                           'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                       userAgentPackageName: 'dev.fleaflet.flutter_map.example',
                     ),
-                    if (tappedCoords != null)
-                      MarkerLayer(
-                        markers: [
-                          Marker(
-                            width: pointSize,
-                            height: pointSize,
-                            point: tappedCoords!,
-                            child: const Icon(
-                              Icons.location_on_sharp,
-                              size: 30,
-                              color: Colors.red,
-                            ),
-                          )
-                        ],
-                      ),
+                    MarkerLayer(
+                      markers: [
+                        Marker(
+                          width: pointSize,
+                          height: pointSize,
+                          point: tappedCoords,
+                          child: const Icon(
+                            Icons.location_on_sharp,
+                            size: 30,
+                            color: Colors.red,
+                          ),
+                        )
+                      ],
+                    ),
                   ],
                 ),
               ],
@@ -183,25 +182,31 @@ class _SetLocationPageState extends State<SetLocationPage> {
 
   void _submitRequest() async {
     try {
-      String userId = _auth.currentUser!.uid;
-      Timestamp timestamp = Timestamp.now();
+      // Check if _auth.currentUser is not null before accessing its properties
+      if (_auth.currentUser != null) {
+        String userId = _auth.currentUser!.uid;
+        Timestamp timestamp = Timestamp.now();
 
-      Map<String, dynamic> requestData = {
-        'itemType': gadget,
-        'brand': brand,
-        'model': model,
-        'issueDescription': desc,
-        'assignedMechanic': null, // Default to null
-        'onHoldReason': null, // Default to null
-        'status': 'pending', // Default to "pending"
-        'timestamp': timestamp,
-        'userId': userId,
-        'isRaining': Provider.of<WeatherProvider>(context, listen: false).isRaining,
-      };
+        Map<String, dynamic> requestData = {
+          'itemType': gadget,
+          'brand': brand,
+          'model': model,
+          'issueDescription': desc,
+          'assignedMechanic': null, // Default to null
+          'onHoldReason': null, // Default to null
+          'status': 'pending', // Default to "pending"
+          'timestamp': timestamp,
+          'userId': userId,
+          'isRaining': Provider.of<WeatherProvider>(context, listen: false).isRaining == "" ? "Clear" : Provider.of<WeatherProvider>(context, listen: false).isRaining ,
+        };
 
-      // Add repair request to Firestore
-      await _firestore.collection('repair_requests').add(requestData);
-      showCustomAlertDialog(context);
+        // Add repair request to Firestore
+        await _firestore.collection('repair_requests').add(requestData);
+        showCustomAlertDialog(context);
+      } else {
+        // Handle the case when _auth.currentUser is null
+        throw FirebaseAuthException(message: 'User not authenticated', code: '');
+      }
     } catch (error) {
       // Handle errors
       print('Error submitting request: $error');
@@ -209,5 +214,6 @@ class _SetLocationPageState extends State<SetLocationPage> {
       showCustomFailDialog(context, error);
     }
   }
+
 
 }

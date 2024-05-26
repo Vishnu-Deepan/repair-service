@@ -17,6 +17,7 @@ class _TrackStatusScreenState extends State<TrackStatusScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -50,7 +51,8 @@ class _TrackStatusScreenState extends State<TrackStatusScreen> {
                 ),
               ],
             ),
-            Expanded(
+
+        Expanded(
               child: StreamBuilder<QuerySnapshot>(
                 stream: _firestore
                     .collection('repair_requests')
@@ -99,55 +101,56 @@ class RequestTile extends StatelessWidget {
         borderRadius:
             BorderRadius.circular(4), // Set border radius to make it sharper
       ),
-      child: ListTile(
-        title: Text(
-          '${request['brand'] ?? 'N/A'}  ${request['model'] ?? 'N/A'}',
-          style: GoogleFonts.inter(
-            fontWeight: FontWeight.bold,
+      child:
+          ListTile(
+            title: Text(
+              '${request['brand'] ?? 'N/A'}  ${request['model'] ?? 'N/A'}',
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${request['itemType'] ?? 'N/A'}',
+                  style: GoogleFonts.inter(),
+                ),
+                Text(
+                  'Issue Description: ${request['issueDescription'] ?? 'N/A'}',
+                  style: GoogleFonts.inter(),
+                ),
+              ],
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RequestDetailsScreen(request: request),
+                ),
+              );
+            },
+            trailing: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: request['status'] == 'Completed'
+                    ? Colors.greenAccent[
+                        200] // Set color to green for completed tasks
+                    : request['status'] == 'pending'
+                        ? Colors.redAccent[100]
+                        : // Set color to red for pending tasks
+                        Colors.yellowAccent[
+                            100], // Set color to yellow for other tasks
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                request['status'],
+                style: TextStyle(
+                  color: Colors.black, // Set text color to white
+                ),
+              ),
+            ),
           ),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '${request['itemType'] ?? 'N/A'}',
-              style: GoogleFonts.inter(),
-            ),
-            Text(
-              'Issue Description: ${request['issueDescription'] ?? 'N/A'}',
-              style: GoogleFonts.inter(),
-            ),
-          ],
-        ),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => RequestDetailsScreen(request: request),
-            ),
-          );
-        },
-        trailing: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            color: request['status'] == 'Completed'
-                ? Colors
-                    .greenAccent[200] // Set color to green for completed tasks
-                : request['status'] == 'pending'
-                    ? Colors.redAccent[100]
-                    : // Set color to red for pending tasks
-                    Colors.yellowAccent[
-                        100], // Set color to yellow for other tasks
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Text(
-            request['status'],
-            style: TextStyle(
-              color: Colors.black, // Set text color to white
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
@@ -162,7 +165,14 @@ class RequestDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: () { Navigator.pop(context); }, icon: Icon(Icons.arrow_back_ios_new),color: Colors.white,iconSize: 17,),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios_new),
+          color: Colors.white,
+          iconSize: 17,
+        ),
         title: const Text(
           'Request Details',
           style: TextStyle(
@@ -234,3 +244,7 @@ class RequestDetailsScreen extends StatelessWidget {
     );
   }
 }
+
+
+
+
