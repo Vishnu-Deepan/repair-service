@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:repair_service/screens/customer/track_status_screen.dart';
-import '../service/model.dart';
+import '../../models/service_model.dart';
 import 'submit_new_request.dart';
 
 class CustomerHomePage extends StatefulWidget {

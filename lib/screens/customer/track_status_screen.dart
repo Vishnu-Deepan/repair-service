@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -161,6 +162,7 @@ class RequestDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(onPressed: () { Navigator.pop(context); }, icon: Icon(Icons.arrow_back_ios_new),color: Colors.white,iconSize: 17,),
         title: const Text(
           'Request Details',
           style: TextStyle(
@@ -168,7 +170,7 @@ class RequestDetailsScreen extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor: Colors.black,
       ),
       body: Container(
         decoration: BoxDecoration(
