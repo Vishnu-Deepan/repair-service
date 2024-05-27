@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RequestDetailsScreen extends StatefulWidget {
   final String documentId;
@@ -36,6 +37,8 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
     final String brand = widget.document['brand'] ?? 'N/A';
     final String model = widget.document['model'] ?? 'N/A';
     final String isRaining = widget.document['isRaining'] ?? 'Clear';
+    final String latitude = widget.document['latitude'].toString();
+    final String longitude = widget.document['longitude'].toString();
 
     return Scaffold(
       body: Container(
@@ -58,8 +61,8 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  icon:
-                      const Icon(Icons.arrow_back_ios_new_sharp, color: Colors.white),
+                  icon: const Icon(Icons.arrow_back_ios_new_sharp,
+                      color: Colors.white),
                 ),
                 const Text(
                   'Mechanic Home',
@@ -277,7 +280,8 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                                 // Overlay text
                                 Center(
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 28.0),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 28.0),
                                     child: Text(
                                       _getOverlayText(isRaining),
                                       style: const TextStyle(
@@ -292,12 +296,17 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                               ],
                             ),
                           ),
-                        )                      ],
+                        )
+                      ],
                     ),
                   ),
-                  SizedBox(height: 30,),
+                  SizedBox(
+                    height: 30,
+                  ),
                   GestureDetector(
-                    onTap: _navigateToLocation,
+                    onTap: () {
+                      navigateToLocation(latitude, longitude);
+                    },
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       height: 70,
@@ -309,7 +318,7 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                         ),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child:Center(
+                      child: Center(
                         child: Text(
                           "Navigate To Location",
                           style: GoogleFonts.capriola(
@@ -318,7 +327,9 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                             color: Colors.white,
                           ),
                         ),
-                      ),),),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -327,8 +338,15 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
       ),
     );
   }
+}
 
-  void _navigateToLocation() {
+void navigateToLocation(String latitude, String longitude) async {
+  final url =
+      'https://www.google.com/maps?q=$latitude,$longitude'; // Replace "Your Location Name" with a descriptive name
+  if (await canLaunchUrl(Uri.parse(url))) {
+    await launchUrl(Uri.parse(url));
+  } else {
+    throw 'Could not launch Google Maps.';
   }
 }
 
@@ -346,8 +364,6 @@ String _getOverlayText(String weatherCondition) {
     default:
       return "❄️ Snowy! Reschedule for warmer days.";
   }
-
-
 }
 
 // Function to get image path based on weather condition

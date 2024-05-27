@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:repair_service/screens/login_signup_screen.dart';
 import 'request_detail.dart';
 
 
@@ -33,7 +34,7 @@ class OwnerHomePage extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>LoginSignupPage()));
                     },
                     icon: Icon(Icons.logout_rounded, color: Colors.white),
                   ),

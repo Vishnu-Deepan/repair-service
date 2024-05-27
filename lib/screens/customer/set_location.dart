@@ -197,6 +197,8 @@ class _SetLocationPageState extends State<SetLocationPage> {
           'status': 'pending', // Default to "pending"
           'timestamp': timestamp,
           'userId': userId,
+          'latitude':currentPosition.latitude,
+          'longitude':currentPosition.longitude,
           'isRaining': Provider.of<WeatherProvider>(context, listen: false).isRaining == "" ? "Clear" : Provider.of<WeatherProvider>(context, listen: false).isRaining ,
         };
 
