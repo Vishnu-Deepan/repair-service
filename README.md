@@ -37,7 +37,7 @@ Welcome to the Repair Service App documentation. This document provides an overv
 **Mechanic Screen**
 <div style="display:flex;">
   <img src="AppScreenshots/Screenshot_20240505_200122.jpg" alt="Screenshot 3" style="width:25%;">
-  <img src="AppScreenshots/Screenshot_20240505_200130.jpg" alt="Screenshot 3" style="width:25%;">
+  <img src="AppScreenshots/Screenshot_20240527_131625.png" alt="Screenshot 3" style="width:25%;">
 </div>
 
 
