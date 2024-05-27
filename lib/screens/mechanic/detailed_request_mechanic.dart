@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RequestDetailsScreen extends StatefulWidget {
   final String documentId;
@@ -293,7 +294,31 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                           ),
                         )                      ],
                     ),
-                  )
+                  ),
+                  SizedBox(height: 30,),
+                  GestureDetector(
+                    onTap: _navigateToLocation,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 70,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Colors.blue, Colors.purple],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child:Center(
+                        child: Text(
+                          "Navigate To Location",
+                          style: GoogleFonts.capriola(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),),),
                 ],
               ),
             ),
@@ -301,6 +326,9 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
         ),
       ),
     );
+  }
+
+  void _navigateToLocation() {
   }
 }
 
